@@ -70,20 +70,38 @@ A API é composta por:
 
 📖 Endpoints
 **Aluno**
+
 POST /alunos: Criar aluno.
+
 GET /alunos: Listar todos os alunos.
+
 GET /alunos/{id}: Buscar aluno por ID.
+
 PUT /alunos/{id}: Atualizar aluno.
+
 DELETE /alunos/{id}: Deletar aluno.
+
+
 **Professor**
+
 POST /professores: Criar professor.
+
 GET /disciplinas/{professorId}: Listar disciplinas associadas.
+
+
 **Disciplina**
+
 POST /disciplinas: Criar disciplina.
+
+
 **Matrícula**
+
 POST /matriculas-alunos: Criar matrícula.
+
 PATCH /matriculas-alunos/trancar/{id}: Trancar matrícula.
+
 PATCH /matriculas-alunos/atualiza-notas/{id}: Atualizar notas.
+
 
 
 🧰 Ferramentas Adicionais
