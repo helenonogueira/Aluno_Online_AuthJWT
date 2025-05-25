@@ -1,119 +1,237 @@
-# API Aluno Online
+# 🛡️ API Aluno Online - Segurança e Autenticação
+Java | Spring Boot | PostgreSQL | Spring Security | JWT
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+# 📜 Descrição
+Continuação do projeto Aluno Online, agora com foco na implementação de segurança, autenticação e autorização utilizando Spring Security com JWT.
 
-## 📜 Descrição
-A **API Aluno Online** é um sistema para gerenciamento de alunos, professores, disciplinas e matrículas. Oferece funcionalidades como:
-- **Criação, atualização, listagem e exclusão de registros**.
-- Cálculo de **média de notas**.
-- Gerenciamento de matrículas e disciplinas.
+Foram adicionadas funcionalidades essenciais para proteger a API e controlar o acesso com base em permissões (roles), além de melhorias nas práticas de desenvolvimento e deploy.
 
----
+# 🛠️ Melhorias Implementadas
+## ✅ 1. Segurança com Spring Security e JWT
+Objetivos:
 
-## 🛠️ Funcionalidades
-### 📘 Aluno
-- Criar, listar, buscar, atualizar e deletar alunos.
-### 👨‍🏫 Professor
-- Cadastrar professores e associar disciplinas.
-### 📚 Disciplina
-- Criar disciplinas e listar as associadas a um professor.
-### 📝 Matrícula
-- Matricular alunos, atualizar notas, calcular médias e trancar matrículas.
+### Proteger a API com autenticação e autorização.
 
----
+### Controle de acesso baseado em permissões (ROLE_ADMIN e ROLE_ALUNO).
 
-## 🏗️ Estrutura do Projeto
-A API é composta por:
-1. **Controller**: Gerencia as requisições HTTP.
-2. **Model**: Define as entidades do sistema.
-3. **Repository**: Conexão entre a aplicação e o banco de dados.
-4. **Service**: Implementa a lógica de negócios.
-5. **DTOs**: Transfere dados entre as camadas.
-6. **Enums**: Gerencia constantes do sistema.
-7. **Config**: Configuração do Swagger.
+### Prevenção contra ataques CSRF e clickjacking.
 
----
+### Principais Configurações:
 
-## 🚀 Tecnologias Utilizadas
-- **Java 11+**
-- **Spring Boot**
-- **PostgreSQL**
-- **Lombok**
-- **Swagger**
+### SecurityConfigurations: Centraliza todas as regras de segurança.
 
----
+### Stateless: Cada requisição é independente, autenticada via token.
 
-## 📦 Como Configurar o Projeto
+### Desativação do CSRF: Utilizando tokens para segurança.
 
-### 1️⃣ Pré-requisitos
-- **Java 11+** instalado.
-- **IDE** como IntelliJ ou Eclipse.
-- **Banco de dados PostgreSQL** configurado.
+## ✅ 2. Implementação de Autenticação
+### /login: Endpoint para autenticação e geração do token JWT.
 
-### 2️⃣ Passos
-1. Acesse [start.spring.io](https://start.spring.io/) e gere um projeto com as dependências:
-   - **Spring Web**
-   - **Spring Data JPA**
-   - **PostgreSQL Driver**
-   - **Lombok**
-2. Baixe e extraia o projeto.
-3. Abra a pasta no **IDE de sua preferência**.
-4. Configure o arquivo `application.properties` com as credenciais do PostgreSQL:
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/seu_banco
-   spring.datasource.username=seu_usuario
-   spring.datasource.password=sua_senha
-   spring.jpa.hibernate.ddl-auto=update
+### AuthController: Gerencia autenticação e cadastro.
 
+### AutenticacaoService: Implementa UserDetailsService para buscar usuário no banco.
 
-📖 Endpoints
-**Aluno**
+### PasswordEncoder: Criptografia de senhas com BCrypt.
 
-POST /alunos: Criar aluno.
+### DTOs Criados:
 
-GET /alunos: Listar todos os alunos.
+### AuthenticationDTO – Recebe login e senha no login.
 
-GET /alunos/{id}: Buscar aluno por ID.
+### LoginResponseDTO – Retorna o token JWT ao usuário.
 
-PUT /alunos/{id}: Atualizar aluno.
+### RegisterDTO – Utilizado no cadastro de novos usuários.
 
-DELETE /alunos/{id}: Deletar aluno.
+## Exemplo de fluxo:
 
+### Usuário envia login e senha.
 
-**Professor**
+### Backend valida e gera JWT.
 
-POST /professores: Criar professor.
+### Token enviado nas próximas requisições no Authorization: Bearer.
 
-GET /disciplinas/{professorId}: Listar disciplinas associadas.
+## ✅ 3. Controle de Acesso por Permissões (Roles)
+### Roles Definidas:
 
+### ROLE_ADMIN: Pode cadastrar professores, alunos e realizar alterações.
 
-**Disciplina**
+### ROLE_ALUNO: Acesso restrito a visualizar informações e realizar matrículas.
 
-POST /disciplinas: Criar disciplina.
+Exemplo de Configuração:
 
+java
+Copiar
+Editar
+http
+  .authorizeRequests()
+  .antMatchers("/cadastros").permitAll()
+  .antMatchers("/admin/**").hasRole("ADMIN")
+  .anyRequest().authenticated();
+No Frontend:
+Exibir ou ocultar abas conforme a role decodificada do JWT.
 
-**Matrícula**
+## ✅ 4. Pacotes e Classes de Segurança
+### SecurityFilter: Filtra as requisições e valida o token JWT.
 
-POST /matriculas-alunos: Criar matrícula.
+### TokenService: Responsável por gerar e validar tokens com Auth0 JWT.
 
-PATCH /matriculas-alunos/trancar/{id}: Trancar matrícula.
+### Configuração do tempo de expiração: Exemplo: 2 horas.
 
-PATCH /matriculas-alunos/atualiza-notas/{id}: Atualizar notas.
+### Chave secreta: Definida via application.properties.
 
+## ✅ 5. Cadastro de Usuários
+### /cadastros: Endpoint público para criação de novos usuários.
 
+### UsuarioController: Gerencia cadastro com validações e criptografia de senha.
 
-🧰 Ferramentas Adicionais
-Swagger
-O Swagger está integrado e pode ser acessado em:
+### Prevenção de cadastros duplicados.
+
+### Tratamento de exceções centralizado (TratadorDeErros).
+
+## ✅ 6. Documentação da API com SpringDoc
+### Swagger OpenAPI: Geração automática da documentação.
+
+### Endpoints de Documentação:
+
+### /swagger-ui.html
+
+### /v3/api-docs/**
+
+### Configurações Especiais:
+
+### Liberação do Swagger sem necessidade de autenticação.
+
+### Configurado suporte para enviar o token Bearer diretamente pelo Swagger.
+
+## ✅ 7. Build e Deploy
+### Separação de configurações:
+
+### application.properties para desenvolvimento.
+
+### application-prod.properties para produção.
+
+### Uso de variáveis de ambiente para dados sensíveis.
+
+Build com Maven:
 
 bash
-Copiar código
-http://localhost:8080/swagger-ui/index.html
-Permite explorar os endpoints e testar a API.
+Copiar
+Editar
+mvn package
+Deploy:
 
-💡 Melhorias Futuras
-Adicionar autenticação com JWT.
-Implementar testes unitários e de integração.
-Adicionar novos endpoints para relatórios.
+bash
+Copiar
+Editar
+java -jar alunoonline.jar
+🏗️ Estrutura do Projeto
+Controller – Gerencia as requisições HTTP.
+
+Model – Define entidades.
+
+Repository – Interface com banco de dados.
+
+Service – Regras de negócio.
+
+DTOs – Dados de entrada e saída, incluindo autenticação.
+
+Config – Configurações de segurança e documentação.
+
+🚀 Tecnologias Utilizadas
+Java 11+
+
+Spring Boot
+
+Spring Security
+
+PostgreSQL
+
+JWT (Auth0)
+
+Lombok
+
+SpringDoc OpenAPI
+
+# 📸 Exemplos de Requisições
+Logo abaixo, insira imagens demonstrando o fluxo completo utilizando o Insomnia:
+
+## 🔐 Login
+➡️ Imagem: Requisição de login bem-sucedida, recebendo token JWT
+
+## ✅ Usuário Autenticado
+➡️ Imagem: Requisição autenticada com token JWT
+
+## 👤 Cadastro de Aluno
+➡️ Imagem: Cadastro de aluno como ROLE_ADMIN
+
+## 👨‍🏫 Cadastro de Admin
+➡️ Imagem: Cadastro de usuário com ROLE_ADMIN
+
+## 🛠️ Configuração de Ambientes
+➡️ Imagem: Exemplo de application.properties e application-prod.properties configurados
+
+## 💡 Boas Práticas Aplicadas
+### ✅ Autenticação e autorização com Spring Security e JWT
+### ✅ Criptografia de senhas com BCrypt
+### ✅ Separação de configurações por ambiente
+### ✅ Build e deploy automatizados com Maven
+### ✅ Documentação completa e integrada com SpringDoc
+### ✅ Tratamento centralizado de exceções
+
+## 📖 Endpoints de Autenticação
+### Método	Endpoint	Descrição
+### POST	/login	Login e geração de token JWT
+### POST	/cadastros	Cadastro de novo usuário
+
+## 📖 Exemplo de Proteção de Endpoints
+### Método	Endpoint	Permissão Necessária
+### POST	/admin/professores	ROLE_ADMIN
+### GET	/alunos	ROLE_ALUNO, ROLE_ADMIN
+### PATCH	/admin/matriculas/{id}	ROLE_ADMIN
+
+## 📈 Próximos Passos
+### ✅ Controle de acesso por roles → Implementado
+
+### ✅ Geração e validação de tokens → Implementado
+
+### ✅ Documentação → Implementado
+
+### 🔜 Testes unitários e de integração
+
+### 🔜 Monitoramento e logging avançados
+
+### 🔜 Deploy automatizado via CI/CD
+
+### ✅ Como Configurar
+## 1️⃣ Pré-requisitos:
+
+Java 11+
+
+PostgreSQL
+
+Maven
+
+## 2️⃣ Configuração:
+
+Ajuste o application.properties com as credenciais do banco.
+
+Para produção, use application-prod.properties e variáveis de ambiente.
+
+properties
+Copiar
+Editar
+spring.datasource.url=jdbc:postgresql://localhost:5432/alunoonline
+spring.datasource.username=usuario
+spring.datasource.password=senha
+spring.jpa.hibernate.ddl-auto=update
+jwt.secret=minha_chave_secreta
+jwt.expiration=2h
+## 3️⃣ Executar:
+
+bash
+Copiar
+Editar
+mvn package  
+java -jar target/alunoonline.jar  
+📬 Contato
+Em caso de dúvidas ou sugestões, entre em contato:
+Heleno Nogueira
