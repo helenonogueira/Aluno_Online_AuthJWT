@@ -117,7 +117,9 @@ Deploy:
 
 bash
 java -jar alunoonline.jar
+
 🏗️ Estrutura do Projeto
+
 Controller – Gerencia as requisições HTTP.
 
 Model – Define entidades.
