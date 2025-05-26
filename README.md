@@ -25,7 +25,7 @@ Objetivos:
 ### Desativação do CSRF: Utilizando tokens para segurança.
 
 ## ✅ 2. Implementação de Autenticação
-### /login: Endpoint para autenticação e geração do token JWT.
+### login: Endpoint para autenticação e geração do token JWT.
 
 ### AuthController: Gerencia autenticação e cadastro.
 
@@ -58,14 +58,12 @@ Objetivos:
 
 Exemplo de Configuração:
 
-java
-Copiar
-Editar
 http
   .authorizeRequests()
   .antMatchers("/cadastros").permitAll()
   .antMatchers("/admin/**").hasRole("ADMIN")
   .anyRequest().authenticated();
+
 No Frontend:
 Exibir ou ocultar abas conforme a role decodificada do JWT.
 
@@ -114,14 +112,10 @@ Exibir ou ocultar abas conforme a role decodificada do JWT.
 Build com Maven:
 
 bash
-Copiar
-Editar
 mvn package
 Deploy:
 
 bash
-Copiar
-Editar
 java -jar alunoonline.jar
 🏗️ Estrutura do Projeto
 Controller – Gerencia as requisições HTTP.
