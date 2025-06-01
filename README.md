@@ -147,23 +147,6 @@ Lombok
 
 SpringDoc OpenAPI
 
-# 📸 Exemplos de Requisições
-Logo abaixo, insira imagens demonstrando o fluxo completo utilizando o Insomnia:
-
-## 🔐 Login
-➡️ Imagem: Requisição de login bem-sucedida, recebendo token JWT
-
-## ✅ Usuário Autenticado
-➡️ Imagem: Requisição autenticada com token JWT
-
-## 👤 Cadastro de Aluno
-➡️ Imagem: Cadastro de aluno como ROLE_ADMIN
-
-## 👨‍🏫 Cadastro de Admin
-➡️ Imagem: Cadastro de usuário com ROLE_ADMIN
-
-## 🛠️ Configuração de Ambientes
-➡️ Imagem: Exemplo de application.properties e application-prod.properties configurados
 
 ## 💡 Boas Práticas Aplicadas
 ### ✅ Autenticação e autorização com Spring Security e JWT
