@@ -1,7 +1,9 @@
 package br.com.alunoonline.api.model;
 
 import br.com.alunoonline.api.service.ProfessorService;
-import jakarta.persistence.*;
+
+import javax.persistence.*;
+import javax.servlet.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
